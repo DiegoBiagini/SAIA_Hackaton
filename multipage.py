@@ -15,7 +15,6 @@ class MultiPage:
             
             func: Python function to render this page in Streamlit
         """
-        print(args)
         self.pages.append({
           
                 "title": title, 
