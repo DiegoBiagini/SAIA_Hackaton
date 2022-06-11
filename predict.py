@@ -3,12 +3,25 @@ from pathlib import Path
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
 import json
+import torch
+from model import model
 
+def load_model():
+    path = Path("model/weights.tar")
+
+    if torch.cuda.is_available():
+        checkpoint = torch.load(path)
+    else: 
+        checkpoint = torch.load(path, map_location=torch.device('cpu'))
+    model = model.TSPrediction(checkpoint["outsize"])
+    model.load_state_dict(checkpoint["model_state_dict"])
+    model.eval()
+    return model
 
 def main():
 
     # Load the model
-
+    #model = load_model()
     # Load what the user currently has
     user_path = Path("user_data/history.csv")
     user_df = pd.read_csv(user_path)
@@ -29,7 +42,9 @@ def main():
     user_future = {}
     for user in user_history.keys():
         # PREDICT
-        future = lambda x : x["user"]
+        np_in = user_history[user]
+        tensor_in = torch.unsqueeze(torch.as_tensor(np_in))
+        future = model(tensor_in).numpy()
 
         user_future[user] = last_row
 

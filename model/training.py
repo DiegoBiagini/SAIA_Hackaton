@@ -6,7 +6,7 @@ import torch
 from torch.utils.data import DataLoader
 from torch.nn.utils.rnn import pad_sequence
 
-BATCH_SIZE = 2
+BATCH_SIZE = 16
 def batch_collate(data):
     X = [data[i][0] for i in range(BATCH_SIZE)]
     target = [data[i][1] for i in range(BATCH_SIZE)]
@@ -52,10 +52,12 @@ def train_model(model, ds, n_epochs, device):
             if device == 'cuda':
                 torch.cuda.empty_cache() 
             
-            if batch % 50 == 0:
+            # Stop early, no time to train
+            if batch == 150:
                 current = batch * X.shape[0]
 
                 print(f"loss: {loss:>7f} [{current:>5d}/{len(ds):>5d}]")
+                break
         
         train_loss = torch.mean(torch.as_tensor(epoch_losses))
         print(f"Train loss:{train_loss:>7f}")
