@@ -1,11 +1,13 @@
 import streamlit as st
 from pathlib import Path
 import pandas as pd
+import os
 
 def app():
     for key in st.session_state.keys():
-        del st.session_state[key]
-
+        if key != "products" and key != "sharing":
+            del st.session_state[key]
+            
     history_file = Path("user_data/history.csv")
     hide_table_row_index = """
             <style>
@@ -32,5 +34,14 @@ def app():
             date = df.iloc[i, df.columns.get_loc("date")]
             date = date[:date.rfind(".")]
             st.write("Date:", date, t[:-1])
+
+        @st.cache
+        def delete_history():
+            os.remove(history_file)
+            
+        delete_button = st.button("Delete my history", on_click=delete_history)
+
+
     else:
         st.write("There is no history about you...")
+    

@@ -4,7 +4,7 @@ import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
 import json
 import torch
-from model import model
+from model.model import TSPrediction
 
 def load_model():
     path = Path("model/weights.tar")
@@ -13,7 +13,7 @@ def load_model():
         checkpoint = torch.load(path)
     else: 
         checkpoint = torch.load(path, map_location=torch.device('cpu'))
-    model = model.TSPrediction(checkpoint["outsize"])
+    model = TSPrediction(checkpoint["outsize"])
     model.load_state_dict(checkpoint["model_state_dict"])
     model.eval()
     return model
@@ -21,7 +21,7 @@ def load_model():
 def main():
 
     # Load the model
-    #model = load_model()
+    model = load_model()
     # Load what the user currently has
     user_path = Path("user_data/history.csv")
     user_df = pd.read_csv(user_path)
@@ -43,10 +43,11 @@ def main():
     for user in user_history.keys():
         # PREDICT
         np_in = user_history[user]
-        tensor_in = torch.unsqueeze(torch.as_tensor(np_in))
-        future = model(tensor_in).numpy()
+        tensor_in = torch.unsqueeze(torch.as_tensor(np_in), 0).float()
+        with torch.no_grad():
+            future = model(tensor_in).detach().numpy()
 
-        user_future[user] = last_row
+        user_future[user] = future
 
     user_similarity = []
     for user in user_future.keys():

@@ -5,8 +5,7 @@ import pandas as pd
 from streamlit import session_state
 
 
-def app(products):
-    product_names = products["product_name"]
+def app():
 
     st.write("Insert what you bought")
 
@@ -15,7 +14,7 @@ def app(products):
     sb = st.empty()
 
     def search_pressed(filter):
-        filtered_names = [k for k in product_names if filter in k]
+        filtered_names = [k for k in session_state["products"] if filter in k]
         if len(filtered_names) > 50:
             filtered_names = filtered_names[:50]
 
@@ -45,7 +44,7 @@ def app(products):
         for g in session_state["grocery_list"]:
             st.write("-" + g)
 
-        final_button = st.button("Register this list", on_click=update_grocery_list, args=(product_names, session_state["grocery_list"]))
+        final_button = st.button("Register this list", on_click=update_grocery_list, args=(session_state["products"], session_state["grocery_list"]))
 
     
 @st.cache
