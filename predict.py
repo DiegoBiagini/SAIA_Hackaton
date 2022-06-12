@@ -8,6 +8,8 @@ from model.model import TSPrediction
 
 def load_model():
     path = Path("model/weights.tar")
+    if not path.is_file():
+        raise FileNotFoundError
 
     if torch.cuda.is_available():
         checkpoint = torch.load(path)
@@ -19,7 +21,6 @@ def load_model():
     return model
 
 def main():
-
     # Load the model
     model = load_model()
     # Load what the user currently has

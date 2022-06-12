@@ -18,7 +18,10 @@ def app():
         filter_best = lambda x : True if x[1] > threshold else False
         sorted_ulist = list(filter(filter_best, sorted_ulist))[:3]
 
-        radio_choices = (str(el[0]) + ", Similarity:" + str(el[1]) for el in sorted_ulist)
+        radio_choices = (
+            f"{str(el[0])}, Similarity:{el[1]:.4f}"
+        
+            for el in sorted_ulist)
         st.radio("Choose one of them", radio_choices)
         
         st.button("SHARE!")

@@ -35,10 +35,9 @@ def app():
             date = date[:date.rfind(".")]
             st.write("Date:", date, t[:-1])
 
-        @st.cache
         def delete_history():
             os.remove(history_file)
-            
+
         delete_button = st.button("Delete my history", on_click=delete_history)
 
 

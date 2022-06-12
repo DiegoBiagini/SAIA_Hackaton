@@ -4,6 +4,7 @@ import json
 import predict
 from streamlit import session_state
 from threading import Thread
+from pathlib import Path
 
 def app():
     for key in st.session_state.keys():
@@ -30,8 +31,16 @@ def app():
         share_anyway_button = st.empty()
 
         def share_anyway():
-            del session_state["sharing"]
-            new_thread = Thread(target=predict.main())
-            new_thread.start()
+            if not Path("user_data/history.csv").is_file():
+                st.error("Please add something to your previous shopping list first")
+            else:
+                del session_state["sharing"]
+                try:
+                    new_thread = Thread(target=predict.main())
+                    new_thread.start()
+                except FileNotFoundError as e:
+                    print(e)
+                    st.error("Prediction can't be performed on the cloud")
+
 
         click = share_anyway_button.button("I want to share anyway", on_click=share_anyway)
