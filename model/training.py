@@ -68,9 +68,9 @@ def train_model(model, ds, n_epochs, device):
 
             epoch_train_state_path = ("model/weights.tar")
             torch.save({
-                'epoch': epoch,
+                #'epoch': epoch,
                 'model_state_dict': model.state_dict(),
-                'optimizer_state_dict': optimizer.state_dict(),
+                #'optimizer_state_dict': optimizer.state_dict(),
                 'outsize' : model.out_size,
             }, epoch_train_state_path)
             print("Checkpointed train state in :", epoch_train_state_path)
@@ -86,7 +86,7 @@ def end_to_end_training(device):
 
 
     model = TSPrediction(ds.n_products)
-    
+
     train_model(model, ds, 5, device)
 
 if __name__ == "__main__":

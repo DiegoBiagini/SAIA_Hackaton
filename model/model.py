@@ -12,22 +12,22 @@ class TSPrediction(Module):
         self.out_size = out_size
 
         self.initial_embedding = nn.Sequential(
-            nn.Conv1d(in_channels= out_size, out_channels=1024, kernel_size=3, padding="same"),
-            nn.BatchNorm1d(1024),
-            nn.Conv1d(in_channels= 1024, out_channels=512, kernel_size=3, padding="same"),
+            nn.Conv1d(in_channels= out_size, out_channels=512, kernel_size=3, padding="same"),
             nn.BatchNorm1d(512),
             nn.Conv1d(in_channels= 512, out_channels=256, kernel_size=3, padding="same"),
             nn.BatchNorm1d(256),
+            nn.Conv1d(in_channels= 256, out_channels=128, kernel_size=3, padding="same"),
+            nn.BatchNorm1d(128),
         )
 
-        self.lstm = nn.LSTM(input_size = 256, hidden_size = 256, bidirectional=True)
+        self.lstm = nn.LSTM(input_size = 128, hidden_size = 128, bidirectional=True)
 
         self.decoder = nn.Sequential(
-            nn.Linear(in_features= 512, out_features=512),
+            nn.Linear(in_features= 256, out_features=256),
             nn.ReLU(),
-            nn.Linear(in_features= 512, out_features=1024),
+            nn.Linear(in_features= 256, out_features=512),
             nn.ReLU(),
-            nn.Linear(in_features= 1024, out_features=self.out_size),
+            nn.Linear(in_features= 512, out_features=self.out_size),
         )
     
 
