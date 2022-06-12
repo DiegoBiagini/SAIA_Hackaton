@@ -50,6 +50,8 @@ def app(products):
     
 @st.cache
 def update_grocery_list(product_names, grocery_list):
+    Path('user_data').mkdir(parents=True, exist_ok=True)
+
     history_file = Path("user_data/history.csv")
     if not history_file.is_file():
         # Create the df from scratch
