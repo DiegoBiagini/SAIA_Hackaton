@@ -1,4 +1,4 @@
-## Hackaton
+## Swiss AI association Hackaton on sustainable AI
 
 Install the requirements  
 pip install -r requirements.txt  
